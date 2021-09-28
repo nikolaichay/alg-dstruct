@@ -15,7 +15,7 @@ extern "C" {
 	Plenty_t* CreateZeroPlenty(void);
 	void DestroyPlenty(Plenty_t* A);
 	void FillPlenty(Plenty_t* A, int size, int step);
-	void AddInPlenty(Plenty_t* A, int elem);
+	bool AddInPlenty(Plenty_t* A, int elem);
 	bool DeleteFromPlenty(Plenty_t* A, int elem);
 	bool IsIncludePlenty(Plenty_t* A, int elem);
 	Plenty_t* PlentyCombine(Plenty_t* A, Plenty_t* B);

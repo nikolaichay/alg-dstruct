@@ -14,6 +14,9 @@ Plenty_t* CreateZeroPlenty(void) {
 	return A;
 }
 void FillPlenty(Plenty_t* A, int size, int step) {
+	if (A == NULL || size == 0) {
+		return;
+	}
 	node_t* p;
 	A->head = (node_t*)malloc(sizeof(node_t));
 	if (A->head == NULL) {
@@ -24,6 +27,9 @@ void FillPlenty(Plenty_t* A, int size, int step) {
 		p->elem = step * i;
 		if (i != size) {
 			p->next = (node_t*)malloc(sizeof(node_t));
+			if (p->next == NULL) {
+				return;
+			}
 			p = p->next;
 		}
 	}
@@ -33,14 +39,14 @@ void DestroyPlenty(Plenty_t* A) {
 	if (A == NULL) {
 		return;
 	}
-	node_t* p,*t;
+	node_t* p, * t;
 	p = A->head;
 	if (p == NULL) {
 		free(A);
 		return;
 	}
 	t = NULL;
-	while (p->next != NULL) {
+	while (p != NULL) {
 		t = p->next;
 		free(p);
 		p = t;
@@ -48,36 +54,42 @@ void DestroyPlenty(Plenty_t* A) {
 	free(A);
 	return;
 }
-void AddInPlenty(Plenty_t* A, int elem) {
+bool AddInPlenty(Plenty_t* A, int elem) {
+	if (A == NULL) {
+		return false;
+	}
 	node_t* p, * t, * h;
 	t = (node_t*)malloc(sizeof(node_t));
 	if (t == NULL) {
-		return;
+		return false;
 	}
 	t->next = NULL;
 	if (A->head == NULL) {
 		t->elem = elem;
 		A->head = t;
-		return;
+		return true;
 	}
 	p = A->head;
 	while (p->elem < elem) {
 		if (p->next == NULL) {
 			t->elem = elem;
 			p->next = t;
-			return;
+			return true;
 		}
 		p = p->next;
+	}
+	if (p->elem == elem) {
+		return false;
 	}
 	h = p->next;
 	t->elem = p->elem;
 	p->elem = elem;
 	p->next = t;
 	t->next = h;
-	return;
+	return true;
 }
 bool DeleteFromPlenty(Plenty_t* A, int elem) {
-	if ((A == NULL) || (A->head == NULL)) {
+	if (A == NULL || A->head == NULL) {
 		return false;
 	}
 	node_t* p, * t, * h;
@@ -96,7 +108,7 @@ bool DeleteFromPlenty(Plenty_t* A, int elem) {
 			return true;
 		}
 	}
-	while ((p->next->elem != elem) && (p->next != NULL)) {
+	while ((p->next != NULL) && (p->next->elem != elem)) {
 		if (p->next->next == NULL) {
 			return false;
 		}
@@ -122,41 +134,63 @@ bool IsIncludePlenty(Plenty_t* A, int elem) {
 	return false;
 }
 Plenty_t* PlentyCombine(Plenty_t* A, Plenty_t* B) {
+	if (A == NULL || B == NULL) {
+		return NULL;
+	}
 	Plenty_t* C = CreateZeroPlenty();
+	if (C == NULL) {
+		return NULL;
+	}
 	node_t* p1 = A->head;
 	node_t* p2 = B->head;
 	while ((p1 != NULL) && (p2 != NULL)) {
 		if (p1->elem > p2->elem) {
-			AddInPlenty(C, p2->elem);
+			if (!AddInPlenty(C, p2->elem)) {
+				return C;
+			}
 			p2 = p2->next;
 			continue;
 		}
 		if (p1->elem < p2->elem) {
-			AddInPlenty(C, p1->elem);
+			if (!AddInPlenty(C, p1->elem)) {
+				return C;
+			}
 			p1 = p1->next;
 			continue;
 		}
-		if (p1->elem = p2->elem) {
-			AddInPlenty(C, p2->elem);
+		if (p1->elem == p2->elem) {
+			if (!AddInPlenty(C, p2->elem)) {
+				return C;
+			}
 			p2 = p2->next;
 			p1 = p1->next;
 			continue;
 		}
 	}
-	while (p1!=NULL)
+	while (p1 != NULL)
 	{
-		AddInPlenty(C, p1->elem);
+		if (!AddInPlenty(C, p1->elem)) {
+			return C;
+		}
 		p1 = p1->next;
 	}
 	while (p2 != NULL)
 	{
-		AddInPlenty(C, p2->elem);
+		if (!AddInPlenty(C, p2->elem)) {
+			return C;
+		}
 		p2 = p2->next;
 	}
 	return C;
 }
 Plenty_t* PlentyIntersect(Plenty_t* A, Plenty_t* B) {
+	if (A == NULL || B == NULL) {
+		return NULL;
+	}
 	Plenty_t* C = CreateZeroPlenty();
+	if (C == NULL) {
+		return NULL;
+	}
 	node_t* p1 = A->head;
 	node_t* p2 = B->head;
 	while ((p1 != NULL) && (p2 != NULL)) {
@@ -168,8 +202,10 @@ Plenty_t* PlentyIntersect(Plenty_t* A, Plenty_t* B) {
 			p1 = p1->next;
 			continue;
 		}
-		if (p1->elem = p2->elem) {
-			AddInPlenty(C, p2->elem);
+		if (p1->elem == p2->elem) {
+			if (!AddInPlenty(C, p2->elem)) {
+				return C;
+			}
 			p2 = p2->next;
 			p1 = p1->next;
 			continue;

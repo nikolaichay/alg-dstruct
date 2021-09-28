@@ -11,66 +11,97 @@ bool CompareValues(Plenty_t* A, int a[], int size) {
 	}
 	return true;
 }
-TEST(Create_Plenty,Create_Normal) {
+TEST(Create_Plenty, Create_Normal) {
 	Plenty_t* A = CreateZeroPlenty();
-	ASSERT_FALSE(A==NULL);
+	ASSERT_FALSE(A == NULL);
 	ASSERT_TRUE(A->head == NULL);
 	DestroyPlenty(A);
 }
 
 TEST(Fill_Plenty, Fill_One) {
 	Plenty_t* A = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (A == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(A, nullptr);
 	FillPlenty(A, 1, 1);
-	ASSERT_EQ(1,A->head->elem);
-	DestroyPlenty(A);
+	ASSERT_NE(nullptr, A->head);
+	ASSERT_EQ(1, A->head->elem);
+	free(A->head);
+	free(A);
 }
 TEST(Fill_Plenty, Fill_Five) {
 	Plenty_t* A = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (A == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(A, nullptr);
 	FillPlenty(A, 3, 1);
-	int a[3] = { 1, 2, 3};
+	ASSERT_NE(nullptr, A->head);
+	ASSERT_NE(nullptr, A->head->next);
+	ASSERT_NE(nullptr, A->head->next->next);
+	int a[3] = { 1, 2, 3 };
 	node_t* p = A->head;
 	ASSERT_EQ(a[0], p->elem);
 	p = p->next;
 	ASSERT_EQ(a[1], p->elem);
 	p = p->next;
 	ASSERT_EQ(a[2], p->elem);
-	DestroyPlenty(A);
+	p = A->head;
+	node_t* t;
+	t = p->next;
+	free(p);
+	p = t;
+	t = p->next;
+	free(p);
+	p = t;
+	t = p->next;
+	free(p);
+	p = t;
+	free(A);
 }
-TEST(Add_Element, AddElelm) {
+TEST(Add_Element, AddElem) {
 	Plenty_t* A = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (A == NULL) {
-		ASSERT_TRUE(0);
-	}
-	A->head=(node_t*)malloc(sizeof(node_t));
+	ASSERT_NE(A, nullptr);
+	A->head = (node_t*)malloc(sizeof(node_t));
 	node_t* p = A->head;
 	p->elem = 1;
 	p->next = NULL;
 	AddInPlenty(A, 2);
+	ASSERT_NE(nullptr, A->head->next);
 	ASSERT_EQ(1, p->elem);
 	ASSERT_EQ(2, p->next->elem);
-	DestroyPlenty(A);
+	p = A->head;
+	node_t* t;
+	t = p->next;
+	free(p);
+	p = t;
+	t = p->next;
+	free(p);
+	p = t;
+	free(A);
+}
+TEST(Add_Element, Add_Equal_Elem) {
+	Plenty_t* A = (Plenty_t*)malloc(sizeof(Plenty_t));
+	ASSERT_NE(A, nullptr);
+	A->head = (node_t*)malloc(sizeof(node_t));
+	node_t* p = A->head;
+	p->elem = 1;
+	p->next = NULL;
+	bool check = AddInPlenty(A, 1);
+	ASSERT_EQ(1, p->elem);
+	ASSERT_EQ(nullptr, p->next);
+	ASSERT_EQ(false, check);
+	p = A->head;
+	free(p);
+	free(A);
 }
 TEST(Add_Element, Add_In_Empty) {
 	Plenty_t* A = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (A == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(A, nullptr);
 	A->head = NULL;
 	AddInPlenty(A, 1);
 	ASSERT_EQ(1, A->head->elem);
-	DestroyPlenty(A);
+	free(A->head);
+	free(A);
 }
 TEST(Delete_Elem, Delete_Exist) {
 	Plenty_t* A = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (A == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(A, nullptr);
 	A->head = (node_t*)malloc(sizeof(node_t));
 	node_t* p = A->head;
 	p->elem = 1;
@@ -81,13 +112,12 @@ TEST(Delete_Elem, Delete_Exist) {
 	DeleteFromPlenty(A, 2);
 	ASSERT_EQ(NULL, A->head->next);
 	ASSERT_EQ(1, A->head->elem);
-	DestroyPlenty(A);
+	free(A->head);
+	free(A);
 }
 TEST(Delete_Elem, Delete_No_Exist) {
 	Plenty_t* A = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (A == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(A, nullptr);
 	A->head = (node_t*)malloc(sizeof(node_t));
 	node_t* p = A->head;
 	p->elem = 1;
@@ -95,26 +125,30 @@ TEST(Delete_Elem, Delete_No_Exist) {
 	p1->elem = 2;
 	p1->next = NULL;
 	p->next = p1;
-	bool check = DeleteFromPlenty(A, 32);
+	bool check = DeleteFromPlenty(A, 3);
 	ASSERT_EQ(false, check);
-	DestroyPlenty(A);
+	p = A->head;
+	node_t* t;
+	t = p->next;
+	free(p);
+	p = t;
+	t = p->next;
+	free(p);
+	p = t;
+	free(A);
 }
 TEST(Delete_Elem, Delete_In_Empty) {
 	Plenty_t* A = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (A == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(A, nullptr);
 	A->head = NULL;
-	bool check = DeleteFromPlenty(A, 32);
+	bool check = DeleteFromPlenty(A, 3);
 	ASSERT_EQ(false, check);
-	DestroyPlenty(A);
+	free(A);
 }
 
 TEST(Search, Elem_Exist) {
 	Plenty_t* A = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (A == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(A, nullptr);
 	A->head = (node_t*)malloc(sizeof(node_t));
 	node_t* p = A->head;
 	p->elem = 1;
@@ -124,14 +158,20 @@ TEST(Search, Elem_Exist) {
 	p->next = p1;
 	bool check = IsIncludePlenty(A, 1);
 	ASSERT_EQ(true, check);
-	DestroyPlenty(A);
+	p = A->head;
+	node_t* t;
+	t = p->next;
+	free(p);
+	p = t;
+	t = p->next;
+	free(p);
+	p = t;
+	free(A);
 }
 
 TEST(Search, Elem_No_Exist) {
 	Plenty_t* A = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (A == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(A, nullptr);
 	A->head = (node_t*)malloc(sizeof(node_t));
 	node_t* p = A->head;
 	p->elem = 1;
@@ -140,26 +180,30 @@ TEST(Search, Elem_No_Exist) {
 	p1->next = NULL;
 	p->next = p1;
 	bool check = IsIncludePlenty(A, 0);
-	ASSERT_EQ(false, check); 
-	DestroyPlenty(A);
+	ASSERT_EQ(false, check);
+	p = A->head;
+	node_t* t;
+	t = p->next;
+	free(p);
+	p = t;
+	t = p->next;
+	free(p);
+	p = t;
+	free(A);
 }
 
 TEST(Search, Plenty_Empty) {
 	Plenty_t* A = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (A == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(A, nullptr);
 	A->head = NULL;
 	bool check = IsIncludePlenty(A, 0);
 	ASSERT_EQ(false, check);
-	DestroyPlenty(A);
+	free(A);
 }
 
 TEST(Combine, Normal_Combine) {
 	Plenty_t* A = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (A == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(A, nullptr);
 	A->head = (node_t*)malloc(sizeof(node_t));
 	node_t* p = A->head;
 	p->elem = 1;
@@ -168,9 +212,7 @@ TEST(Combine, Normal_Combine) {
 	p1->next = NULL;
 	p->next = p1;
 	Plenty_t* B = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (B == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(B, nullptr);
 	B->head = (node_t*)malloc(sizeof(node_t));
 	p = B->head;
 	p->elem = 3;
@@ -180,18 +222,50 @@ TEST(Combine, Normal_Combine) {
 	p->next = p1;
 	Plenty_t* C = PlentyCombine(A, B);
 	int a[4] = { 1,2,3,4 };
-	bool check = CompareValues(C, a, 4);
-	ASSERT_EQ(true, check);
-	DestroyPlenty(A);
-	DestroyPlenty(B);
-	DestroyPlenty(C);
+	ASSERT_NE(nullptr, C->head);
+	ASSERT_NE(nullptr, C->head->next);
+	ASSERT_NE(nullptr, C->head->next->next);
+	ASSERT_NE(nullptr, C->head->next->next->next);
+	ASSERT_EQ(a[0], C->head->elem);
+	ASSERT_EQ(a[1], C->head->next->elem);
+	ASSERT_EQ(a[2], C->head->next->next->elem);
+	ASSERT_EQ(a[3], C->head->next->next->next->elem);
+	p = A->head;
+	node_t* t;
+	t = p->next;
+	free(p);
+	p = t;
+	t = p->next;
+	free(p);
+	p = t;
+	free(A);
+	p = B->head;
+	t = p->next;
+	free(p);
+	p = t;
+	t = p->next;
+	free(p);
+	p = t;
+	free(B);
+	p = C->head;
+	t = p->next;
+	free(p);
+	p = t;
+	t = p->next;
+	free(p);
+	p = t;
+	t = p->next;
+	free(p);
+	p = t;
+	t = p->next;
+	free(p);
+	p = t;
+	free(C);
 }
 
 TEST(Combine, Combine_One_Empty) {
 	Plenty_t* A = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (A == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(A, nullptr);
 	A->head = (node_t*)malloc(sizeof(node_t));
 	node_t* p = A->head;
 	p->elem = 1;
@@ -200,41 +274,50 @@ TEST(Combine, Combine_One_Empty) {
 	p1->next = NULL;
 	p->next = p1;
 	Plenty_t* B = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (B == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(B, nullptr);
 	B->head = NULL;
 	Plenty_t* C = PlentyCombine(A, B);
+	ASSERT_NE(nullptr, C->head);
+	ASSERT_NE(nullptr, C->head->next);
 	ASSERT_EQ(1, C->head->elem);
 	ASSERT_EQ(2, C->head->next->elem);
-	DestroyPlenty(A);
-	DestroyPlenty(B);
-	DestroyPlenty(C);
+	p = A->head;
+	node_t* t;
+	t = p->next;
+	free(p);
+	p = t;
+	t = p->next;
+	free(p);
+	p = t;
+	free(A);
+	free(B);
+	p = C->head;
+	t = p->next;
+	free(p);
+	p = t;
+	t = p->next;
+	free(p);
+	p = t;
+	free(C);
 }
 
 TEST(Combine, Combine_Both_Empty) {
 	Plenty_t* A = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (A == NULL) {
-		ASSERT_TRUE(0);
-	}
-	A->head =NULL;
+	ASSERT_NE(A, nullptr);
+	A->head = NULL;
 	Plenty_t* B = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (B == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(B, nullptr);
 	B->head = NULL;
 	Plenty_t* C = PlentyCombine(A, B);
 	ASSERT_EQ(NULL, C->head);
-	DestroyPlenty(A);
-	DestroyPlenty(B);
-	DestroyPlenty(C);
+	free(A);
+	free(B);
+	free(C);
 }
 
 TEST(Intersect, Intersect_Normal) {
 	Plenty_t* A = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (A == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(A, nullptr);
 	A->head = (node_t*)malloc(sizeof(node_t));
 	node_t* p = A->head;
 	p->elem = 1;
@@ -243,9 +326,7 @@ TEST(Intersect, Intersect_Normal) {
 	p1->next = NULL;
 	p->next = p1;
 	Plenty_t* B = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (B == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(B, nullptr);
 	B->head = (node_t*)malloc(sizeof(node_t));
 	p = B->head;
 	p->elem = 2;
@@ -254,18 +335,34 @@ TEST(Intersect, Intersect_Normal) {
 	p1->next = NULL;
 	p->next = p1;
 	Plenty_t* C = PlentyIntersect(A, B);
+	ASSERT_NE(nullptr, C->head);
 	ASSERT_EQ(2, C->head->elem);
 	ASSERT_EQ(NULL, C->head->next);
-	DestroyPlenty(A);
-	DestroyPlenty(B);
-	DestroyPlenty(C);
+	p = A->head;
+	node_t* t;
+	t = p->next;
+	free(p);
+	p = t;
+	t = p->next;
+	free(p);
+	p = t;
+	free(A);
+	p = B->head;
+	t = p->next;
+	free(p);
+	p = t;
+	t = p->next;
+	free(p);
+	p = t;
+	free(B);
+	p = C->head;
+	free(p);
+	free(C);
 }
 
 TEST(Intersect, Intersect_One_Empty) {
 	Plenty_t* A = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (A == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(A, nullptr);
 	A->head = (node_t*)malloc(sizeof(node_t));
 	node_t* p = A->head;
 	p->elem = 1;
@@ -274,32 +371,33 @@ TEST(Intersect, Intersect_One_Empty) {
 	p1->next = NULL;
 	p->next = p1;
 	Plenty_t* B = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (B == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(B, nullptr);
 	B->head = NULL;
 	Plenty_t* C = PlentyIntersect(A, B);
 	ASSERT_EQ(NULL, C->head);
-	DestroyPlenty(A);
-	DestroyPlenty(B);
-	DestroyPlenty(C);
+	p = A->head;
+	node_t* t;
+	t = p->next;
+	free(p);
+	p = t;
+	t = p->next;
+	free(p);
+	p = t;
+	free(A);
+	free(B);
+	free(C);
 }
 
 TEST(Intersect, Intersect_Both_Empty) {
 	Plenty_t* A = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (A == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(A, nullptr);
 	A->head = NULL;
 	Plenty_t* B = (Plenty_t*)malloc(sizeof(Plenty_t));
-	if (B == NULL) {
-		ASSERT_TRUE(0);
-	}
+	ASSERT_NE(B, nullptr);
 	B->head = NULL;
 	Plenty_t* C = PlentyIntersect(A, B);
 	ASSERT_EQ(NULL, C->head);
-	DestroyPlenty(A);
-	DestroyPlenty(B);
-	DestroyPlenty(C);
-	_CrtDumpMemoryLeaks;
+	free(A);
+	free(B);
+	free(C);
 }
