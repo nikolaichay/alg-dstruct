@@ -22,6 +22,10 @@ void FillPlenty(Plenty_t* A, int size, int step) {
 	if (A->head == NULL) {
 		return;
 	}
+	if (step == 0) {
+		AddInPlenty(A, 0);
+		return;
+	}
 	p = A->head;
 	for (int i = 1; i <= size; i++) {
 		p->elem = step * i;
@@ -146,21 +150,30 @@ Plenty_t* PlentyCombine(Plenty_t* A, Plenty_t* B) {
 	while ((p1 != NULL) && (p2 != NULL)) {
 		if (p1->elem > p2->elem) {
 			if (!AddInPlenty(C, p2->elem)) {
-				return C;
+				if (IsIncludePlenty(C, p2->elem)) {
+					p2 = p2->next;
+				}
+				continue;
 			}
 			p2 = p2->next;
 			continue;
 		}
 		if (p1->elem < p2->elem) {
 			if (!AddInPlenty(C, p1->elem)) {
-				return C;
+				if (IsIncludePlenty(C, p1->elem)) {
+					p1 = p1->next;
+				}
+				continue;
 			}
 			p1 = p1->next;
 			continue;
 		}
 		if (p1->elem == p2->elem) {
 			if (!AddInPlenty(C, p2->elem)) {
-				return C;
+				if (IsIncludePlenty(C, p2->elem)) {
+					p2 = p2->next;
+				}
+				continue;
 			}
 			p2 = p2->next;
 			p1 = p1->next;
@@ -170,14 +183,20 @@ Plenty_t* PlentyCombine(Plenty_t* A, Plenty_t* B) {
 	while (p1 != NULL)
 	{
 		if (!AddInPlenty(C, p1->elem)) {
-			return C;
+			if (IsIncludePlenty(C, p1->elem)) {
+				p1 = p1->next;
+			}
+			continue;
 		}
 		p1 = p1->next;
 	}
 	while (p2 != NULL)
 	{
 		if (!AddInPlenty(C, p2->elem)) {
-			return C;
+			if (IsIncludePlenty(C, p2->elem)) {
+				p2 = p2->next;
+			}
+			continue;
 		}
 		p2 = p2->next;
 	}
@@ -204,7 +223,10 @@ Plenty_t* PlentyIntersect(Plenty_t* A, Plenty_t* B) {
 		}
 		if (p1->elem == p2->elem) {
 			if (!AddInPlenty(C, p2->elem)) {
-				return C;
+				if (IsIncludePlenty(C, p2->elem)) {
+					p2 = p2->next;
+				}
+				continue;
 			}
 			p2 = p2->next;
 			p1 = p1->next;
