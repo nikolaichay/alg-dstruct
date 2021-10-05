@@ -150,30 +150,24 @@ Plenty_t* PlentyCombine(Plenty_t* A, Plenty_t* B) {
 	while ((p1 != NULL) && (p2 != NULL)) {
 		if (p1->elem > p2->elem) {
 			if (!AddInPlenty(C, p2->elem)) {
-				if (IsIncludePlenty(C, p2->elem)) {
-					p2 = p2->next;
-				}
-				continue;
+				DestroyPlenty(C);
+				return NULL;
 			}
 			p2 = p2->next;
 			continue;
 		}
 		if (p1->elem < p2->elem) {
 			if (!AddInPlenty(C, p1->elem)) {
-				if (IsIncludePlenty(C, p1->elem)) {
-					p1 = p1->next;
-				}
-				continue;
+				DestroyPlenty(C);
+				return NULL;
 			}
 			p1 = p1->next;
 			continue;
 		}
 		if (p1->elem == p2->elem) {
 			if (!AddInPlenty(C, p2->elem)) {
-				if (IsIncludePlenty(C, p2->elem)) {
-					p2 = p2->next;
-				}
-				continue;
+				DestroyPlenty(C);
+				return NULL;
 			}
 			p2 = p2->next;
 			p1 = p1->next;
@@ -183,20 +177,16 @@ Plenty_t* PlentyCombine(Plenty_t* A, Plenty_t* B) {
 	while (p1 != NULL)
 	{
 		if (!AddInPlenty(C, p1->elem)) {
-			if (IsIncludePlenty(C, p1->elem)) {
-				p1 = p1->next;
-			}
-			continue;
+			DestroyPlenty(C);
+			return NULL;
 		}
 		p1 = p1->next;
 	}
 	while (p2 != NULL)
 	{
 		if (!AddInPlenty(C, p2->elem)) {
-			if (IsIncludePlenty(C, p2->elem)) {
-				p2 = p2->next;
-			}
-			continue;
+			DestroyPlenty(C);
+			return NULL;
 		}
 		p2 = p2->next;
 	}
@@ -223,10 +213,8 @@ Plenty_t* PlentyIntersect(Plenty_t* A, Plenty_t* B) {
 		}
 		if (p1->elem == p2->elem) {
 			if (!AddInPlenty(C, p2->elem)) {
-				if (IsIncludePlenty(C, p2->elem)) {
-					p2 = p2->next;
-				}
-				continue;
+				DestroyPlenty(C);
+				return NULL;
 			}
 			p2 = p2->next;
 			p1 = p1->next;
