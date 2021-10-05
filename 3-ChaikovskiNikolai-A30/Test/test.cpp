@@ -90,7 +90,7 @@ TEST(Add_Element, Add_In_Empty) {
 	ASSERT_NE(A, nullptr);
 	A->head = NULL;
 	bool check = AddInPlenty(A, 1);
-	ASSERT_EQ(false, check);
+	ASSERT_EQ(true, check);
 	ASSERT_EQ(1, A->head->elem);
 	free(A->head);
 	free(A);
