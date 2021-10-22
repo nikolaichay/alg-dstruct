@@ -1,0 +1,6 @@
+*Debug/
+*Release/
+x32/
+.vs
+packages/
+*.vcxproj*
