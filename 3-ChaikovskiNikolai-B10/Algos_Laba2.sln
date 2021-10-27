@@ -5,6 +5,20 @@ VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Algos_Laba2", "Algos_Laba2\Algos_Laba2.vcxproj", "{6AB64734-241D-403E-A808-51CD69BA5EA1}"
 EndProject
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "TESTLaba2", "..\TESTLaba2\Debug\TESTLaba2.exe", "{7E0D8873-3A07-4832-A65E-648316AF88E1}"
+	ProjectSection(DebuggerProjectSystem) = preProject
+		PortSupplier = 00000000-0000-0000-0000-000000000000
+		Executable = C:\Users\nikol\source\repos\TESTLaba2\Debug\TESTLaba2.exe
+		RemoteMachine = DESKTOP-SF5AQVP
+		StartingDirectory = C:\Users\nikol\source\repos\TESTLaba2\Debug
+		Environment = По умолчанию
+		LaunchingEngine = 00000000-0000-0000-0000-000000000000
+		UseLegacyDebugEngines = No
+		LaunchSQLEngine = No
+		AttachLaunchAction = No
+		IORedirection = Auto
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +35,10 @@ Global
 		{6AB64734-241D-403E-A808-51CD69BA5EA1}.Release|x64.Build.0 = Release|x64
 		{6AB64734-241D-403E-A808-51CD69BA5EA1}.Release|x86.ActiveCfg = Release|Win32
 		{6AB64734-241D-403E-A808-51CD69BA5EA1}.Release|x86.Build.0 = Release|Win32
+		{7E0D8873-3A07-4832-A65E-648316AF88E1}.Debug|x64.ActiveCfg = Release|x86
+		{7E0D8873-3A07-4832-A65E-648316AF88E1}.Debug|x86.ActiveCfg = Release|x86
+		{7E0D8873-3A07-4832-A65E-648316AF88E1}.Release|x64.ActiveCfg = Release|x86
+		{7E0D8873-3A07-4832-A65E-648316AF88E1}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
