@@ -79,7 +79,7 @@ void memfree(void* p) {
 	}
 	void* desc = (void*)((char*)p - sizeof(int) - sizeof(void*));
 	void* prevDesc = NULL;
-	if ((char*)desc-1 > (char*)pmemory)
+	if ((char*)desc - 1 > (char*)pmemory)
 		prevDesc = (void*)((char*)desc - abs(*((int*)desc - 1)));
 	void* nextDesc = (void*)(GetSizeofRight(desc) + 1);
 	char mergeLeft = 0, mergeRight = 0;
@@ -130,7 +130,7 @@ void memdone() {
 		if (GetSizeofBlock(cur) < 0) {
 			fprintf(stderr, "Memory leak detected: %d bytes of %p\n", *(char*)(*GetNext(cur)), (char*)cur + sizeof(int) + sizeof(void*));
 		}
-		cur = (char*)(cur)+abs(*GetSizeofBlock(cur));
+		cur = (char*)(cur) + abs(*GetSizeofBlock(cur));
 	}
 }
 int memgetminimumsize() {
