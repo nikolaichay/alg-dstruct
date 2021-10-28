@@ -130,7 +130,7 @@ void memdone() {
 		if (GetSizeofBlock(cur) < 0) {
 			fprintf(stderr, "Memory leak detected: %d bytes of %p\n", *(char*)(*GetNext(cur)), (char*)cur + sizeof(int) + sizeof(void*));
 		}
-		cur = (char*)(cur)+abs(*GetSizeofBlock(cur));
+		cur = (char*)(cur) + abs(*GetSizeofBlock(cur));
 	}
 }
 int memgetminimumsize() {
