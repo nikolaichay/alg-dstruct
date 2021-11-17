@@ -1,0 +1,10 @@
+**Debug
+**Release
+**.vs
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.user
+**.config
+**Tests/StressTest.txt
+**Tests/Output.txt 
