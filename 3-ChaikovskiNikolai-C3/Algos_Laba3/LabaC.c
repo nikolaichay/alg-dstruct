@@ -62,10 +62,10 @@ void GraphDelete(graph_t* graph) {
 		free(graph);
 	}
 }
-void Enqueue(queue_t* queue, int n) {
+int Enqueue(queue_t* queue, int n) {
 	node_t* node = NodeCreate(n);
 	if (!node) {
-		return;
+		return 0;
 	}
 	if (queue->size > 0) {
 		queue->back->next = node;
@@ -76,6 +76,7 @@ void Enqueue(queue_t* queue, int n) {
 		queue->back = node;
 	}
 	queue->size++;
+	return 1;
 }
 int Dequeue(queue_t* queue) {
 	if (queue->size > 0) {
@@ -89,24 +90,36 @@ int Dequeue(queue_t* queue) {
 	else
 		return 0;
 }
-void GraphRead(FILE* in, graph_t* graph) {
+graph_t* GraphRead(FILE* in) {
+	int size = 0;
+	fscanf(in, "%d\n", &size);
+	if (!size) {
+		return NULL;
+	}
+	graph_t* graph = GraphCreate(size);
+	if (!graph) {
+		return NULL;
+	}
 	int first, nextVal = 0;
 	char c;
 	if (!in) {
-		return;
+		return NULL;
 	}
 	while (fscanf(in, "%i%c", &first, &c) > 0) {
 		if (c != ' ') {
 			continue;
 		}
 		while (fscanf(in, "%i%c", &nextVal, &c) > 0) {
-			Enqueue(graph->links[first], nextVal);
-			Enqueue(graph->links[nextVal], first);
+			if (!Enqueue(graph->links[first], nextVal) || !Enqueue(graph->links[nextVal], first)) {
+				GraphDelete(graph);
+				return NULL;
+			}
 			if (c != ' ') {
 				break;
 			}
 		}
 	}
+	return graph;
 }
 int BFS(graph_t* graph, FILE* out) {
 	bool* flags = (bool*)calloc(graph->size, sizeof(bool));
@@ -127,13 +140,16 @@ int BFS(graph_t* graph, FILE* out) {
 			int n = Dequeue(graph->links[cur]);
 			if (!flags[n]) {
 				flags[n] = 1;
-				Enqueue(queue, n);
+				if (!Enqueue(queue, n)) {
+					QueueDelete(queue);
+					return 0;
+				}
 			}
 		}
 		if (queue->size > 0) {
 			fprintf(out, " ");
 		}
-	} while ((cur = Dequeue(queue)));
+	} while (cur = Dequeue(queue));
 	free(flags);
 	QueueDelete(queue);
 	return 1;

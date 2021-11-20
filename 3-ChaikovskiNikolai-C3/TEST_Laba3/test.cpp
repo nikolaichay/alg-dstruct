@@ -20,7 +20,6 @@ SDD: 256GB
 LabSolution_StressTest results (run on Release VS configuration):
 Time: 15.881 sec to generate graph
 59.455 sec to output answer
-RAM: about
 */
 const char* filenameGraph = "StressTestGraph.txt";
 const int verticesCount = (int)1e6;
@@ -53,10 +52,7 @@ TEST(LabSolution_StressTest, LabSolutionMainStressTest) {
 		printf("Error while opening %s file!\n", filenameGraph);
 		ASSERT_TRUE(fileGraph);
 	}
-	int size;
-	fscanf(fileGraph, "%d", &size);
-	graph_t* graph = GraphCreate(size);
-	GraphRead(fileGraph,graph);
+	graph_t* graph = GraphRead(fileGraph);
 	fclose(fileGraph);
 	if (!graph) {
 		printf("Failed to read graph!\n");
