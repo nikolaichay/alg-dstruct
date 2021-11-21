@@ -38,6 +38,9 @@ graph_t* GraphCreate(int size) {
 	for (int i = 0; i < size; i++) {
 		graph->links[i] = QueueCreate();
 		if (!graph->links[i]) {
+			for (int j = 0; j < i; j++) {
+				QueueDelete(graph->links[j]);
+			}
 			free(graph);
 			return NULL;
 		}
@@ -92,6 +95,9 @@ int Dequeue(queue_t* queue) {
 }
 graph_t* GraphRead(FILE* in) {
 	int size = 0;
+	if (!in) {
+		return NULL;
+	}
 	fscanf(in, "%d\n", &size);
 	if (!size) {
 		return NULL;
@@ -102,9 +108,6 @@ graph_t* GraphRead(FILE* in) {
 	}
 	int first, nextVal = 0;
 	char c;
-	if (!in) {
-		return NULL;
-	}
 	while (fscanf(in, "%i%c", &first, &c) > 0) {
 		if (c != ' ') {
 			continue;
@@ -142,6 +145,7 @@ int BFS(graph_t* graph, FILE* out) {
 				flags[n] = 1;
 				if (!Enqueue(queue, n)) {
 					QueueDelete(queue);
+					free(flags);
 					return 0;
 				}
 			}
@@ -149,7 +153,7 @@ int BFS(graph_t* graph, FILE* out) {
 		if (queue->size > 0) {
 			fprintf(out, " ");
 		}
-	} while (cur = Dequeue(queue));
+	}while (cur = Dequeue(queue));
 	free(flags);
 	QueueDelete(queue);
 	return 1;
