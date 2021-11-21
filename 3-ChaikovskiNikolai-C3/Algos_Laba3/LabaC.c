@@ -41,6 +41,7 @@ graph_t* GraphCreate(int size) {
 			for (int j = 0; j < i; j++) {
 				QueueDelete(graph->links[j]);
 			}
+			free(graph->links);
 			free(graph);
 			return NULL;
 		}
