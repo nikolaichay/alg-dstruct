@@ -91,8 +91,9 @@ int Dequeue(queue_t* queue) {
 		queue->size--;
 		return value;
 	}
-	else
+	else {
 		return 0;
+	}
 }
 graph_t* GraphRead(FILE* in) {
 	int size = 0;
@@ -154,7 +155,7 @@ int BFS(graph_t* graph, FILE* out) {
 		if (queue->size > 0) {
 			fprintf(out, " ");
 		}
-	}while (cur = Dequeue(queue));
+	} while (cur = Dequeue(queue));
 	free(flags);
 	QueueDelete(queue);
 	return 1;

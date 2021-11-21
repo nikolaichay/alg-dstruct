@@ -64,7 +64,7 @@ TEST(LabSolution_StressTest, LabSolutionMainStressTest) {
 		printf("Error while opening %s file!\n", filenameOutput);
 		ASSERT_TRUE(fileOutput);
 	}
-	depthFirstTraversalResult =BFS(graph, fileOutput);
+	depthFirstTraversalResult = BFS(graph, fileOutput);
 	if (!depthFirstTraversalResult) {
 		fclose(fileOutput);
 		GraphDelete(graph);
