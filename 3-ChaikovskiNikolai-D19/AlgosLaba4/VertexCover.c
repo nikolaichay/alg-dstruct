@@ -20,17 +20,17 @@ graph_t* GraphCreate(int size) {
 		free(graph);
 		return NULL;
 	}
-	edges->Head = NULL;
+	edges->head = NULL;
 	edges->size = 0;
 	graph->edges = edges;
 	return graph;
 }
 void EdgesDelete(edges_t* edges) {
-	edge_t* tmp = edges->Head;
+	edge_t* tmp = edges->head;
 	while (tmp != NULL) {
-		tmp = edges->Head->next;
-		free(edges->Head);
-		edges->Head = tmp;
+		tmp = edges->head->next;
+		free(edges->head);
+		edges->head = tmp;
 	}
 	free(edges);
 }
@@ -42,20 +42,23 @@ void GraphDelete(graph_t* graph) {
 }
 void AddEdge(edges_t* edges, edge_t* edge) {
 	edge->check = 0;
-	if (!edges->Head) {
-		edges->Head = edge;
+	if (!edges->head) {
+		edges->head = edge;
 		edges->size++;
 	}
 	else {
-		edge->next = edges->Head;
-		edges->Head = edge;
+		edge->next = edges->head;
+		edges->head = edge;
 		edges->size++;
 	}
 }
-graph_t* GraphRead(FILE* in,int* k) {
+graph_t* GraphRead(FILE* in, int* k) {
 	int size = 0;
 	fscanf(in, "%d %d\n", &size, k);
 	if (!size) {
+		return NULL;
+	}
+	if (!in) {
 		return NULL;
 	}
 	graph_t* graph = GraphCreate(size);
@@ -63,14 +66,15 @@ graph_t* GraphRead(FILE* in,int* k) {
 		return NULL;
 	}
 	int first, second = 0;
-	if (!in) {
-		return NULL;
-	}
-	while (fscanf(in, "%d %d\n", &first, &second)>0) {
-		edge_t* edge=EdgeCreate(first, second);
+	while (fscanf(in, "%d %d\n", &first, &second) > 0) {
+		edge_t* edge = EdgeCreate(first, second);
+		if (!edge) {
+			GraphDelete(graph);
+			return NULL;
+		}
 		AddEdge(graph->edges, edge);
 	}
-	edge_t* head = graph->edges->Head;
+	edge_t* head = graph->edges->head;
 	while (head) {
 		//printf("%d, %d\n", head->first, head->second);
 		head = head->next;
@@ -78,22 +82,22 @@ graph_t* GraphRead(FILE* in,int* k) {
 	return graph;
 }
 int IsSolution(graph_t* graph) {
-	edge_t* Head = graph->edges->Head;
-	while (Head != NULL) {
-		if (Head->check ==0) {
+	edge_t* head = graph->edges->head;
+	while (!head) {
+		if (head->check == 0) {
 			return 0;
 		}
-		Head = Head->next;
+		head = head->next;
 	}
 	return 1;
 }
 void ChangeInGraph(graph_t* graph, int edge) {
-	edge_t* Head = graph->edges->Head;
-	while (Head != NULL) {
-		if (Head->first == abs(edge) || Head->second == abs(edge)) {
-			Head->check = (Head->check + (edge/abs(edge)));
+	edge_t* head = graph->edges->head;
+	while (!head) {
+		if (head->first == abs(edge) || head->second == abs(edge)) {
+			head->check = (head->check + (edge / abs(edge)));
 		}
-		Head = Head->next;
+		head = head->next;
 	}
 }
 int* SearchRefurd(int* ver, int m, graph_t* graph, int k) {
@@ -104,7 +108,7 @@ int* SearchRefurd(int* ver, int m, graph_t* graph, int k) {
 		return NULL;
 	}
 	else {
-		for (int i = m+1; i <= graph->edges->size; i++) {
+		for (int i = m + 1; i <= graph->edges->size; i++) {
 			ver[m] = i;
 			ChangeInGraph(graph, i);
 			if (SearchRefurd(ver, m + 1, graph, k)) {
@@ -115,17 +119,18 @@ int* SearchRefurd(int* ver, int m, graph_t* graph, int k) {
 		return NULL;
 	}
 }
-int VertexCover(graph_t* graph, int k,FILE* out) {
+void VertexCover(graph_t* graph, int k, FILE* out) {
 	int n = graph->size;
 	int* ver = (int*)calloc(k, sizeof(int));
 	int m = 0;
-	ver=SearchRefurd(ver, m, graph, k);
-	if (ver == NULL) {
+	int* tmpver = SearchRefurd(ver, m, graph, k);
+	if (!tmpver) {
 		fprintf(out, "%d ", 0);
 		free(ver);
-		return -1;
+		return;
 	}
 	else {
+		ver = tmpver;
 		for (int i = 0; i < k; i++) {
 			if (ver[i] != 0) {
 				fprintf(out, "%d ", ver[i]);
@@ -133,5 +138,15 @@ int VertexCover(graph_t* graph, int k,FILE* out) {
 		}
 	}
 	free(ver);
+	return;
+}
+int VertexCoverFile(FILE* in, FILE* out) {
+	int k = 0;
+	graph_t* graph = GraphRead(in, &k);
+	if (!graph) {
+		return 0;
+	}
+	VertexCover(graph, k, out);
+	GraphDelete(graph);
 	return 1;
 }
