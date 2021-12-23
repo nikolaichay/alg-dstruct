@@ -54,11 +54,11 @@ void AddEdge(edges_t* edges, edge_t* edge) {
 }
 graph_t* GraphRead(FILE* in, int* k) {
 	int size = 0;
-	fscanf(in, "%d %d\n", &size, k);
-	if (!size) {
+	if (!in) {
 		return NULL;
 	}
-	if (!in) {
+	fscanf(in, "%d %d\n", &size, k);
+	if (!size) {
 		return NULL;
 	}
 	graph_t* graph = GraphCreate(size);

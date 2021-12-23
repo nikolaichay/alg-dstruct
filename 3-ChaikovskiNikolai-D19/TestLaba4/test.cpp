@@ -36,32 +36,32 @@ TEST(StressTest, GraphGeneration) {
 	fclose(graphFile);
 }
 
-//TEST(StressTest, GraphCover) {
-//	const char* filenameOut = "OutStress";
-//	FILE* graphFile = fopen(filename, "r");
-//	if (!graphFile) {
-//		perror("Error while opening file");
-//		FAIL();
-//	}
-//	int k = 0;
-//	graph_t* graph = GraphRead(graphFile, &k);
-//	fclose(graphFile);
-//	if (!graph) {
-//		perror("Error during graph creation");
-//		FAIL();
-//	}
-//	printf("read done\n");
-//
-//	FILE* outFile = fopen(filenameOut, "w");
-//	if (!outFile) {
-//		GraphDelete(graph);
-//		perror("Error while opening file");
-//		FAIL();
-//	}
-//	VertexCover(graph, k, outFile);
-//	GraphDelete(graph);
-//	fclose(outFile);
-//}
+TEST(StressTest, GraphCover) {
+	const char* filenameOut = "OutStress";
+	FILE* graphFile = fopen(filename, "r");
+	if (!graphFile) {
+		perror("Error while opening file");
+		FAIL();
+	}
+	int k = 0;
+	graph_t* graph = GraphRead(graphFile, &k);
+	fclose(graphFile);
+	if (!graph) {
+		perror("Error during graph creation");
+		FAIL();
+	}
+	printf("read done\n");
+
+	FILE* outFile = fopen(filenameOut, "w");
+	if (!outFile) {
+		GraphDelete(graph);
+		perror("Error while opening file");
+		FAIL();
+	}
+	VertexCover(graph, k, outFile);
+	GraphDelete(graph);
+	fclose(outFile);
+}
 TEST(VertexCoverTest, FunctionalTestIncorrectData) {
 	char* in = "FirstTest.txt";
 	FILE* inF = fopen(in, "r");
@@ -74,6 +74,7 @@ TEST(VertexCoverTest, FunctionalTestIncorrectData) {
 	int check = VertexCoverFile(inF, outF);
 	EXPECT_EQ(check, 0);
 	fclose(inF);
+	fclose(outF);
 }
 TEST(VertexCoverTest, FunctionalTestNoSolutions) {
 	char* in = "SecondTest.txt";
@@ -105,7 +106,8 @@ TEST(VertexCoverTest, FunctionalTestNoSolutions) {
 		perror("");
 		FAIL();
 	}
-	int a, b;
+	int a;
+	int b;
 	fscanf(outF, "%d", &a);
 	fscanf(ansF, "%d", &b);
 	EXPECT_EQ(a, b);
