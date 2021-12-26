@@ -57,22 +57,22 @@ void FreeTree(tree_t* tree) {
 		free(tree);
 	}
 }
-int PrintTree(tree_t* tree, int n) {
+int PrintTree(tree_t* tree, int n,FILE* in) {
 	int i;
 	if (!tree) {
 		return 0;
 	}
 	else {
-		PrintTree(tree->right, n + 5);
+		PrintTree(tree->right, n + 5, in);
 		for (i = 0; i < n; i++) {
-			putchar(' ');
+			fprintf(in, " ");
 		}
-		printf("%d\n", tree->val);
+		fprintf(in, "%d\n", tree->val);
 		for (i = 0; i < n; i++) {
-			putchar(' ');
+			fprintf(in, " ");
 		}
-		printf("%d\n", tree->len);
-		PrintTree(tree->left, n + 5);
+		fprintf(in, "%d\n", tree->len);
+		PrintTree(tree->left, n + 5, in);
 		return 1;
 	}
 }
