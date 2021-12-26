@@ -159,12 +159,6 @@ TEST(FunctionalTest, CheckPrint) {
 	tree = Insert(tree, 66);
 	tree = Insert(tree, 60);
 	FillLen(tree);
-	EXPECT_EQ(tree->left->left->len, 1);
-	EXPECT_EQ(tree->left->right->len, 2);
-	EXPECT_EQ(tree->left->len, 5);
-	EXPECT_EQ(tree->right->left->len, 2);
-	EXPECT_EQ(tree->right->len, 4);
-	EXPECT_EQ(tree->len, 11);
 	FILE* out = fopen("Result.txt", "w");
 	if (!out) {
 		FAIL();
