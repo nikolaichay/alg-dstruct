@@ -161,13 +161,14 @@ TEST(FunctionalTest, CheckPrint) {
 	FillLen(tree);
 	FILE* out = fopen("Result.txt", "w");
 	if (!out) {
+		FreeTree(tree);
 		FAIL();
 	}
 	int check = PrintTree(tree, 1, out);
+	FreeTree(tree);
 	EXPECT_EQ(check, 1);
 	fclose(out);
 	check = 0;
 	check = Compare("Result.txt", "Answer.txt");
 	EXPECT_EQ(check, 1);
-	FreeTree(tree);
 }
