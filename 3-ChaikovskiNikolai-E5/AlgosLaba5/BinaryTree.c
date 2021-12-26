@@ -23,7 +23,7 @@ tree_t* Insert(tree_t* tree, int val) {
 	if (!tree) {
 		tree = (tree_t*)malloc(sizeof(tree_t));
 		if (!tree) {
-			printf("error in memory");
+			printf("Error in memory.");
 			return NULL;
 		}
 		tree->val = val;
@@ -36,13 +36,15 @@ tree_t* Insert(tree_t* tree, int val) {
 		if (val <= tree->val) {
 			tree->left = Insert(tree->left, val);
 			if (!tree->left) {
-				return NULL;
+				printf("Not enough memory. The element %d was not added", val);
+				return tree;
 			}
 		}
 		else if (val > tree->val) {
 			tree->right = Insert(tree->right, val);
 			if (!tree->right) {
-				return NULL;
+				printf("Not enough memory. The element %d was not added", val);
+				return tree;
 			}
 		}
 	}
@@ -55,10 +57,13 @@ void FreeTree(tree_t* tree) {
 		free(tree);
 	}
 }
-void PrintTree(tree_t* tree, int n) {
+int PrintTree(tree_t* tree, int n) {
 	int i;
-	if (tree) {
-		PrintTree(tree->right, n + 3);
+	if (!tree) {
+		return 0;
+	}
+	else {
+		PrintTree(tree->right, n + 5);
 		for (i = 0; i < n; i++) {
 			putchar(' ');
 		}
@@ -67,54 +72,30 @@ void PrintTree(tree_t* tree, int n) {
 			putchar(' ');
 		}
 		printf("%d\n", tree->len);
-		PrintTree(tree->left, n + 3);
-
+		PrintTree(tree->left, n + 5);
+		return 1;
 	}
 }
-void FillLen(tree_t** tree) {
-	int fillRes = 0, curWidth = 0, tmp = 0, curVal = 0, tmpRight = 0, tmpLeft = 0;
+void FillLen(tree_t* tree) {
+	int tmpRight = 0, tmpLeft = 0;
 	if (!tree) {
 		return;
 	}
-	if (!(*tree)->left && !(*tree)->right) {
-		curVal = TotalDigit((*tree)->val);
-		curWidth = TotalDigit(curVal + tmp);
-		fillRes = curVal + curWidth;
-		if (TotalDigit(fillRes) > TotalDigit(curWidth)) {
-			fillRes++;
-		}
-		(*tree)->len = fillRes;
+	if (!tree->left && !tree->right) {
+		tree->len = TotalDigit(tree->val);
 		return;
 	}
-	if ((*tree)->left) {
-		FillLen(&((*tree)->left));
-		tree_t* tmpTree = *tree;
-		tmpTree = tmpTree->left;
-		tmp = tmpTree->len;
-		curVal = TotalDigit((*tree)->val);
-		curWidth = TotalDigit(curVal + tmp);
-		fillRes = tmp;
-		if (!(*tree)->right) {
-			fillRes = tmp + curVal + curWidth;
+	if (tree->left) {
+		FillLen(tree->left);
+		tmpLeft = tree->left->len;
+		tree->len = tmpLeft;
+		if (!tree->right) {
+			tree->len += TotalDigit(tree->val);
 		}
 	}
-	if ((*tree)->right) {
-		FillLen(&((*tree)->right));
-		tree_t* tmpTree = *tree;
-		tmpTree = tmpTree->right;
-		tmp = tmpTree->len;
-		curVal = TotalDigit((*tree)->val);
-		curWidth = TotalDigit(curVal + tmp + fillRes);
-		fillRes += tmp + curVal + curWidth;
+	if (tree->right) {
+		FillLen(tree->right);
+		tmpRight = tree->right->len + TotalDigit(tree->val);
+		tree->len += tmpRight;
 	}
-	if ((*tree)->right) {
-		tmpRight = (*tree)->right->len;
-	}
-	if ((*tree)->left) {
-		tmpLeft = (*tree)->left->len;
-	}
-	if (TotalDigit(fillRes) > TotalDigit(tmpRight + tmpLeft + curVal)) {
-		fillRes++;
-	}
-	(*tree)->len = fillRes;
 }
