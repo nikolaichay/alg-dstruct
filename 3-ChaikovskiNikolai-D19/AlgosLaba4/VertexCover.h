@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#pragma warning(disable: 4996)
 typedef struct edge_t {
 	int first, second;
 	struct edge_t* next;

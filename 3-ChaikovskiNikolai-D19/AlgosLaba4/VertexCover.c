@@ -1,4 +1,5 @@
 #include "VertexCover.h"
+#pragma warning(disable: 4996)
 edge_t* EdgeCreate(int a, int b) {
 	edge_t* edge = (edge_t*)malloc(sizeof(edge_t));
 	if (!edge) {
@@ -79,11 +80,12 @@ graph_t* GraphRead(FILE* in, int* k) {
 		//printf("%d, %d\n", head->first, head->second);
 		head = head->next;
 	}
+	printf("read done\n");
 	return graph;
 }
 int IsSolution(graph_t* graph) {
 	edge_t* head = graph->edges->head;
-	while (!head) {
+	while (head) {
 		if (head->check == 0) {
 			return 0;
 		}
@@ -93,7 +95,7 @@ int IsSolution(graph_t* graph) {
 }
 void ChangeInGraph(graph_t* graph, int edge) {
 	edge_t* head = graph->edges->head;
-	while (!head) {
+	while (head) {
 		if (head->first == abs(edge) || head->second == abs(edge)) {
 			head->check = (head->check + (edge / abs(edge)));
 		}
@@ -123,7 +125,8 @@ void VertexCover(graph_t* graph, int k, FILE* out) {
 	int n = graph->size;
 	int* ver = (int*)calloc(k, sizeof(int));
 	int m = 0;
-	int* tmpver = SearchRefurd(ver, m, graph, k);
+	int m1 = 0;
+	int* tmpver = SearchRefurd(ver, m1, graph, k);
 	if (!tmpver) {
 		fprintf(out, "%d ", 0);
 		free(ver);

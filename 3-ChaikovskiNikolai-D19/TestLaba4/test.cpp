@@ -3,19 +3,21 @@
 #include "VertexCover.c"
 
 /*
-*  OS: Arch Linux x86_64
- * PC configuration:
- *      CPU: AMD Ryzen 5 4500U (6) @ 2.375 GHz
- *      RAM: 16 GB
- *      SSD: 512 GB nvme
- */
+IDE: Microsoft Visual Studio 2019
+OS: Windows 10 Home rus 20H2 Build 19043.1348
+PC configuration:
+CPU: Intel(R) Core(TM) i3-7100U CPU @ 2.40GHz
+Motherboard: LENOVO
+RAM: 8GB
+SDD: 256GB
+*/
 
- /*
-  * load test results (cmake build type release):
-  * Time: 0.001s to generate graph file (size 60, k = 4)
-  *       82.18s to read and walk around the graph
-  * RAM:  up to 1.089 MiB
- */
+/*
+load test results (cmake build type release):
+Time: 0.006s to generate graph file (size 60, k = 4)
+	  88.18s to read and walk around the graph
+RAM:  up to 1.089 MiB
+*/
 
 const char* filename = "InStress.txt";
 const int verticesCount = 60;
@@ -43,23 +45,14 @@ TEST(StressTest, GraphCover) {
 		perror("Error while opening file");
 		FAIL();
 	}
-	int k = 0;
-	graph_t* graph = GraphRead(graphFile, &k);
-	fclose(graphFile);
-	if (!graph) {
-		perror("Error during graph creation");
-		FAIL();
-	}
-	printf("read done\n");
-
 	FILE* outFile = fopen(filenameOut, "w");
 	if (!outFile) {
-		GraphDelete(graph);
+		fclose(graphFile);
 		perror("Error while opening file");
 		FAIL();
 	}
-	VertexCover(graph, k, outFile);
-	GraphDelete(graph);
+	VertexCoverFile(graphFile, outFile);
+	fclose(graphFile);
 	fclose(outFile);
 }
 TEST(VertexCoverTest, FunctionalTestIncorrectData) {
