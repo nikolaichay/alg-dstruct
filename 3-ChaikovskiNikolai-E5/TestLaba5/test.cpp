@@ -44,9 +44,18 @@ TEST(FunctionalTest, OnlyRoot) {
 	}
 	FillLen(tree);
 	EXPECT_EQ(tree->len, 9);
-	int check = PrintTree(tree, 1, stdout);
-	EXPECT_EQ(check, 1);
+	FILE* out = fopen("Result1.txt", "w");
+	if (!out) {
+		FreeTree(tree);
+		FAIL();
+	}
+	int check = PrintTree(tree, 1, out);
 	FreeTree(tree);
+	EXPECT_EQ(check, 1);
+	fclose(out);
+	check = 0;
+	check = Compare("Result1.txt", "Answer1.txt");
+	EXPECT_EQ(check, 1);
 }
 
 TEST(FunctionalTest, TreeWithZero) {
@@ -57,9 +66,18 @@ TEST(FunctionalTest, TreeWithZero) {
 		ASSERT_TRUE(tree);
 	}
 	FillLen(tree);
-	int check = PrintTree(tree, 1, stdout);
-	EXPECT_EQ(check, 1);
+	FILE* out = fopen("Result2.txt", "w");
+	if (!out) {
+		FreeTree(tree);
+		FAIL();
+	}
+	int check = PrintTree(tree, 1, out);
 	FreeTree(tree);
+	EXPECT_EQ(check, 1);
+	fclose(out);
+	check = 0;
+	check = Compare("Result2.txt", "Answer2.txt");
+	EXPECT_EQ(check, 1);
 }
 
 TEST(FunctionalTest, CheckResult) {
@@ -81,9 +99,18 @@ TEST(FunctionalTest, CheckResult) {
 	EXPECT_EQ(tree->right->left->len, 2);
 	EXPECT_EQ(tree->right->len, 4);
 	EXPECT_EQ(tree->len, 11);
-	int check = PrintTree(tree, 1, stdout);
-	EXPECT_EQ(check, 1);
+	FILE* out = fopen("Result3.txt", "w");
+	if (!out) {
+		FreeTree(tree);
+		FAIL();
+	}
+	int check = PrintTree(tree, 1, out);
 	FreeTree(tree);
+	EXPECT_EQ(check, 1);
+	fclose(out);
+	check = 0;
+	check = Compare("Result3.txt", "Answer3.txt");
+	EXPECT_EQ(check, 1);
 }
 
 TEST(FunctionalTest, NegativeElements) {
@@ -103,9 +130,18 @@ TEST(FunctionalTest, NegativeElements) {
 	EXPECT_EQ(tree->right->left->len, 3);
 	EXPECT_EQ(tree->right->len, 8);
 	EXPECT_EQ(tree->len, 14);
-	int check = PrintTree(tree, 1, stdout);
-	EXPECT_EQ(check, 1);
+	FILE* out = fopen("Result4.txt", "w");
+	if (!out) {
+		FreeTree(tree);
+		FAIL();
+	}
+	int check = PrintTree(tree, 1, out);
 	FreeTree(tree);
+	EXPECT_EQ(check, 1);
+	fclose(out);
+	check = 0;
+	check = Compare("Result4.txt", "Answer4.txt");
+	EXPECT_EQ(check, 1);
 }
 
 TEST(FunctionalTest, ElementsWithOverDigitInTheRoot) {
@@ -121,9 +157,18 @@ TEST(FunctionalTest, ElementsWithOverDigitInTheRoot) {
 	EXPECT_EQ(tree->right->len, 3);
 	EXPECT_EQ(tree->left->len, 2);
 	EXPECT_EQ(tree->len, 7);
-	int check = PrintTree(tree, 1, stdout);
-	EXPECT_EQ(check, 1);
+	FILE* out = fopen("Result5.txt", "w");
+	if (!out) {
+		FreeTree(tree);
+		FAIL();
+	}
+	int check = PrintTree(tree, 1, out);
 	FreeTree(tree);
+	EXPECT_EQ(check, 1);
+	fclose(out);
+	check = 0;
+	check = Compare("Result5.txt", "Answer5.txt");
+	EXPECT_EQ(check, 1);
 }
 TEST(FunctionalTest, NegativeAndPositiveElements) {
 	tree_t* tree = nullptr;
@@ -142,24 +187,7 @@ TEST(FunctionalTest, NegativeAndPositiveElements) {
 	EXPECT_EQ(tree->left->right->len, 1);
 	EXPECT_EQ(tree->left->left->len, 3);
 	EXPECT_EQ(tree->len, 9);
-	int check = PrintTree(tree, 1, stdout);
-	EXPECT_EQ(check, 1);
-	FreeTree(tree);
-}
-TEST(FunctionalTest, CheckPrint) {
-	tree_t* tree = nullptr;
-	tree = Insert(tree, 51);
-	if (!tree) {
-		printf("Not enough memory");
-		ASSERT_TRUE(tree);
-	}
-	tree = Insert(tree, 20);
-	tree = Insert(tree, 1);
-	tree = Insert(tree, 43);
-	tree = Insert(tree, 66);
-	tree = Insert(tree, 60);
-	FillLen(tree);
-	FILE* out = fopen("Result.txt", "w");
+	FILE* out = fopen("Result6.txt", "w");
 	if (!out) {
 		FreeTree(tree);
 		FAIL();
@@ -169,6 +197,6 @@ TEST(FunctionalTest, CheckPrint) {
 	EXPECT_EQ(check, 1);
 	fclose(out);
 	check = 0;
-	check = Compare("Result.txt", "Answer.txt");
+	check = Compare("Result6.txt", "Answer6.txt");
 	EXPECT_EQ(check, 1);
 }
