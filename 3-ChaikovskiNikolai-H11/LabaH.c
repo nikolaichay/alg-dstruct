@@ -131,7 +131,7 @@ node_t* DeleteData(node_t* p, int data) {
 	}
 	node_t* q = DeleteData(p->left, data);
 	node_t* r = DeleteData(p->right, data);
-	return p;
+	return Balance(p);
 }
 
 node_t* SearchData(node_t* p, int data) {
@@ -142,11 +142,11 @@ node_t* SearchData(node_t* p, int data) {
 		return p;
 	}
 	node_t* q = SearchData(p->left, data);
-	if (!q && q->left->data == data) {
+	if (q->data == data) {
 		return q;
 	}
 	node_t* r = SearchData(p->right, data);
-	if (!r && r->right->data == data) {
+	if (r->data == data) {
 		return r;
 	}
 	return NULL;
@@ -162,9 +162,9 @@ node_t* SearchKey(node_t* p, int k) {
 		return p;
 	}
 	if (k < p->key)
-		SearchKey(p->left, k);
+		return SearchKey(p->left, k);
 	else
-		SearchKey(p->right, k);
+		return SearchKey(p->right, k);
 }
 void TreeDestroy(node_t* p) {
 	if (p) {
@@ -189,34 +189,30 @@ node_t* Merge(node_t* p, node_t* q) {
 		return p;
 	}
 	node_t* tmp = p;
+	node_t* prev = NULL;
 	while (!tmp->right) {
+		prev = tmp;
 		tmp = tmp->right;
 	}
+	tmp->left = p;
+	tmp->right = q;
+	prev->right = NULL;
 	int len1 = tmp->key;
 	UpdateKey(q, len1);
-	node_t* fict = malloc(sizeof(node_t));
-	if (!fict) {
-		return NULL;
-	}
-	fict->data = -1;
-	fict->left = p;
-	fict->right = q;
-	fict->height = -1;
-	fict->key = -1;
-	fict = DeleteKey(fict, -1);
-	return fict;
+	FixHeight(tmp);
+	return tmp;
 }
 
 
 int test() {
 	node_t* p = NULL;
 	char command[16] = " ", ch;
-	int key,data;
-	while (fgets(command, 16, stdin)) {
+	int key, data;
+	while (fgets(command, 16, stdin)) { // Пример входной строки a 1 3
 		sscanf(command, "%c%i%i\n", &ch, &key, &data);
 		switch (ch) {
 		case 'a':
-			p = Insert(p, key,data);
+			p = Insert(p, key, data);
 			break;
 		case 'r':
 			p = DeleteKey(p, key);
