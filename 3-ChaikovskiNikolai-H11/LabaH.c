@@ -59,6 +59,7 @@ node_t* Balance(node_t* p) {
 	}
 	return p;
 }
+
 node_t* Insert(node_t* p, int key, int data) {
 	if (!p) {
 		p = (node_t*)malloc(sizeof(node_t));
@@ -74,16 +75,26 @@ node_t* Insert(node_t* p, int key, int data) {
 			return p;
 		}
 	}
-	if (p->key == key) {
-		return p;
-	}
-	if (key < p->key) {
+
+	if (key < p->key)
 		p->left = Insert(p->left, key, data);
-	}
-	if (key > p->key) {
+	if (key >= p->key)
 		p->right = Insert(p->right, key, data);
-	}
 	return Balance(p);
+}
+
+node_t* InsertForTest(node_t* p, int data) {
+	if (!p) {
+		p = Insert(p, 0, data);
+	}
+	else {
+		node_t* tmp = p;
+		while (tmp->right) {
+			tmp = tmp->right;
+		}
+		p = Insert(p, (tmp->key) + 1, data);
+	}
+	return p;
 }
 
 node_t* Findmin(node_t* p) {
@@ -122,14 +133,6 @@ node_t* DeleteKey(node_t* p, int key) {
 	}
 	return Balance(p);
 }
-node_t* DeleteData(node_t* p, int data) {
-	node_t* tmp = SearchData(p, data);
-	if (!tmp) {
-		return p;
-	}
-	int key = tmp->key;
-	p = DeleteKey(p, key);
-}
 
 node_t* SearchData(node_t* p, int data) {
 	if (!p) {
@@ -159,12 +162,22 @@ node_t* SearchKey(node_t* p, int k) {
 		return p;
 	}
 	if (k < p->key) {
-		return SearchKey(p->left, k);
+		SearchKey(p->left, k);
 	}
 	else {
-		return SearchKey(p->right, k);
+		SearchKey(p->right, k);
 	}
 }
+
+node_t* DeleteData(node_t* p, int data) {
+	node_t* tmp = SearchData(p, data);
+	if (!tmp) {
+		return p;
+	}
+	int key = tmp->key;
+	p = DeleteKey(p, key);
+}
+
 void TreeDestroy(node_t* p) {
 	if (p) {
 		TreeDestroy(p->left);
@@ -172,6 +185,7 @@ void TreeDestroy(node_t* p) {
 		free(p);
 	}
 }
+
 void UpdateKey(node_t* p, int new) {
 	if (!p) {
 		return;
@@ -180,6 +194,7 @@ void UpdateKey(node_t* p, int new) {
 	UpdateKey(p->left, new);
 	UpdateKey(p->right, new);
 }
+
 node_t* Merge(node_t* p, node_t* q) {
 	if (!p) {
 		return q;
@@ -210,10 +225,10 @@ node_t* Merge(node_t* p, node_t* q) {
 	}
 	int len2 = tmp->key;
 	if (k1 > k2) {
-		UpdateKey(q, len1);
+		UpdateKey(p, len2);
 	}
 	else {
-		UpdateKey(p, len2);
+		UpdateKey(q, len1);
 		int k = k1;
 		k2 = k1;
 		k1 = k;
@@ -237,26 +252,33 @@ node_t* Merge(node_t* p, node_t* q) {
 	cur->left = q;
 	cur->right = tmp;
 	prev->left = cur;
-	Balance(prev);
+	prev = Balance(prev);
 	return p;
 }
 
 
-int test() {
+int lab() {
 	node_t* p = NULL;
+	node_t* tmp;
 	char command[16] = " ", ch;
-	int key, data;
-	while (fgets(command, 16, stdin)) { // Example of an input string a 1 3
-		sscanf(command, "%c%i%i\n", &ch, &data, &key);
+	int data;
+	while (fgets(command, 16, stdin)) {
+		sscanf(command, "%c%i", &ch, &data);
 		switch (ch) {
 		case 'a':
-			p = Insert(p, key, data);
+			p = InsertForTest(p, data);
 			break;
 		case 'r':
 			p = DeleteData(p, data);
 			break;
 		case 'f':
-			SearchKey(p, key);
+			tmp = SearchData(p, data);
+			if (!tmp) {
+				printf("no");
+			}
+			else {
+				printf("yes");
+			}
 			break;
 		default:
 			TreeDestroy(p);
@@ -267,6 +289,6 @@ int test() {
 	return 0;
 }
 int main() {
-	test();
+	lab();
 	return 0;
 }
