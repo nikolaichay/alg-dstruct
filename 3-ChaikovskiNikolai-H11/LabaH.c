@@ -162,10 +162,10 @@ node_t* SearchKey(node_t* p, int k) {
 		return p;
 	}
 	if (k < p->key) {
-		SearchKey(p->left, k);
+		return SearchKey(p->left, k);
 	}
 	else {
-		SearchKey(p->right, k);
+		return SearchKey(p->right, k);
 	}
 }
 
@@ -176,6 +176,7 @@ node_t* DeleteData(node_t* p, int data) {
 	}
 	int key = tmp->key;
 	p = DeleteKey(p, key);
+	return p;
 }
 
 void TreeDestroy(node_t* p) {
