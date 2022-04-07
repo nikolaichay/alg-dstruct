@@ -46,15 +46,13 @@ node_t* RotateLeft(node_t* q) {
 node_t* Balance(node_t* p) {
 	FixHeight(p);
 	if (Bfactor(p) == 2) {
-		if (Bfactor(p->right) < 0) {
+		if (Bfactor(p->right) < 0)
 			p->right = RotateRight(p->right);
-		}
 		return RotateLeft(p);
 	}
 	if (Bfactor(p) == -2) {
-		if (Bfactor(p->left) > 0) {
+		if (Bfactor(p->left) > 0)
 			p->left = RotateLeft(p->left);
-		}
 		return RotateRight(p);
 	}
 	return p;
@@ -63,9 +61,8 @@ node_t* Balance(node_t* p) {
 node_t* Insert(node_t* p, int key, int data) {
 	if (!p) {
 		p = (node_t*)malloc(sizeof(node_t));
-		if (!p) {
+		if (!p)
 			return NULL;
-		}
 		else {
 			p->data = data;
 			p->left = NULL;
@@ -102,23 +99,19 @@ node_t* Findmin(node_t* p) {
 }
 
 node_t* Removemin(node_t* p) {
-	if (!p->left) {
+	if (!p->left)
 		return p->right;
-	}
 	p->left = Removemin(p->left);
 	return Balance(p);
 }
 
 node_t* DeleteKey(node_t* p, int key) {
-	if (!p) {
-		return NULL;
-	}
-	if (key < p->key) {
+	if (!p)
+		return 0;
+	if (key < p->key)
 		p->left = DeleteKey(p->left, key);
-	}
-	else if (key > p->key) {
+	else if (key > p->key)
 		p->right = DeleteKey(p->right, key);
-	}
 	else {
 		node_t* q = p->left;
 		node_t* r = p->right;
@@ -161,12 +154,10 @@ node_t* SearchKey(node_t* p, int k) {
 		fprintf(stdout, "yes\n");
 		return p;
 	}
-	if (k < p->key) {
-		return SearchKey(p->left, k);
-	}
-	else {
-		return SearchKey(p->right, k);
-	}
+	if (k < p->key)
+		SearchKey(p->left, k);
+	else
+		SearchKey(p->right, k);
 }
 
 node_t* DeleteData(node_t* p, int data) {
@@ -191,11 +182,20 @@ void UpdateKey(node_t* p, int new) {
 	if (!p) {
 		return;
 	}
-	p->key = p->key + new;
+	p->key = p->key + new+1;
 	UpdateKey(p->left, new);
 	UpdateKey(p->right, new);
 }
 
+void PrintTree(node_t* p) {
+	if (!p) {
+		return;
+	}
+	printf("%i ,%i\n", p->data, p->key);
+	PrintTree(p->left);
+	PrintTree(p->right);
+	return;
+}
 node_t* Merge(node_t* p, node_t* q) {
 	if (!p) {
 		return q;
@@ -205,49 +205,65 @@ node_t* Merge(node_t* p, node_t* q) {
 	}
 	int k1 = 0;
 	int k2 = 0;
+	int k = 0;
 	node_t* tmp = p;
-	while (!tmp->right) {
+	while (tmp->right) {
 		tmp = tmp->right;
 	}
 	int len1 = tmp->key;
+	tmp = q;
+	while (tmp->right) {
+		tmp = tmp->right;
+	}
+	int len2 = tmp->key;
 	tmp = p;
-	while (!tmp->left) {
+	while (tmp->left) {
 		tmp = tmp->left;
 		k1++;
 	}
+	tmp = p;
+	while (tmp->right) {
+		tmp = tmp->right;
+		k++;
+	}
+	k1 = k1 > k ? k1 : k;
 	tmp = q;
-	while (!tmp->left) {
+	k = 0;
+	while (tmp->left) {
 		tmp = tmp->left;
 		k2++;
 	}
 	tmp = q;
-	while (!tmp->right) {
+	while (tmp->right) {
 		tmp = tmp->right;
+		k++;
 	}
-	int len2 = tmp->key;
+	k2 = k2 > k ? k2 : k;
 	if (k1 > k2) {
 		UpdateKey(p, len2);
 	}
 	else {
 		UpdateKey(q, len1);
 		int k = k1;
-		k2 = k1;
-		k1 = k;
+		k1= k2;
+		k2 = k;
 		tmp = p;
 		p = q;
 		q = tmp;
 	}
 	tmp = q;
-	while (!tmp->right) {
+	node_t* prev = NULL;
+	while (tmp->right) {
+		prev = tmp;
 		tmp = tmp->right;
 	}
 	node_t* cur = tmp;
-	DeleteKey(q, cur->key);
+	prev->right = NULL;
 	tmp = p;
-	node_t* prev = NULL;
+	prev = NULL;
 	while (k1 - k2 != 0) {
 		prev = tmp;
-		tmp->left;
+		tmp = tmp->left;
 		k1--;
 	}
 	cur->left = q;
@@ -256,7 +272,6 @@ node_t* Merge(node_t* p, node_t* q) {
 	prev = Balance(prev);
 	return p;
 }
-
 
 int lab() {
 	node_t* p = NULL;
@@ -290,6 +305,26 @@ int lab() {
 	return 0;
 }
 int main() {
-	lab();
+	//lab();
+	node_t* p = NULL;
+	node_t* q = NULL;
+	q = InsertForTest(q, 1);
+	q=InsertForTest(q, 2);
+	q=InsertForTest(q, 7);
+	p = InsertForTest(p, 3);
+	p = InsertForTest(p, 4);
+	p = InsertForTest(p, 6);
+	p = InsertForTest(p, -1);
+	p = InsertForTest(p, -2);
+	p = InsertForTest(p, 10);
+	p = InsertForTest(p, 11);
+	p = InsertForTest(p, 12);
+	PrintTree(p);
+	printf("\n");
+	PrintTree(q);
+	printf("\n");
+	p=Merge(p, q);
+	PrintTree(p);
+	TreeDestroy(p);
 	return 0;
 }
