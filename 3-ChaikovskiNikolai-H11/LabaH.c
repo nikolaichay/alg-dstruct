@@ -46,13 +46,15 @@ node_t* RotateLeft(node_t* q) {
 node_t* Balance(node_t* p) {
 	FixHeight(p);
 	if (Bfactor(p) == 2) {
-		if (Bfactor(p->right) < 0)
+		if (Bfactor(p->right) < 0) {
 			p->right = RotateRight(p->right);
+		}
 		return RotateLeft(p);
 	}
 	if (Bfactor(p) == -2) {
-		if (Bfactor(p->left) > 0)
+		if (Bfactor(p->left) > 0) {
 			p->left = RotateLeft(p->left);
+		}
 		return RotateRight(p);
 	}
 	return p;
@@ -61,8 +63,9 @@ node_t* Balance(node_t* p) {
 node_t* Insert(node_t* p, int key, int data) {
 	if (!p) {
 		p = (node_t*)malloc(sizeof(node_t));
-		if (!p)
+		if (!p) {
 			return NULL;
+		}
 		else {
 			p->data = data;
 			p->left = NULL;
@@ -99,19 +102,23 @@ node_t* Findmin(node_t* p) {
 }
 
 node_t* Removemin(node_t* p) {
-	if (!p->left)
+	if (!p->left) {
 		return p->right;
+	}
 	p->left = Removemin(p->left);
 	return Balance(p);
 }
 
 node_t* DeleteKey(node_t* p, int key) {
-	if (!p)
-		return 0;
-	if (key < p->key)
+	if (!p) {
+		return NULL;
+	}
+	if (key < p->key) {
 		p->left = DeleteKey(p->left, key);
-	else if (key > p->key)
+	}
+	else if (key > p->key) {
 		p->right = DeleteKey(p->right, key);
+	}
 	else {
 		node_t* q = p->left;
 		node_t* r = p->right;
@@ -182,7 +189,7 @@ void UpdateKey(node_t* p, int new) {
 	if (!p) {
 		return;
 	}
-	p->key = p->key + new+1;
+	p->key = p->key + new + 1;
 	UpdateKey(p->left, new);
 	UpdateKey(p->right, new);
 }
@@ -245,7 +252,7 @@ node_t* Merge(node_t* p, node_t* q) {
 	else {
 		UpdateKey(q, len1);
 		int k = k1;
-		k1= k2;
+		k1 = k2;
 		k2 = k;
 		tmp = p;
 		p = q;
@@ -305,26 +312,6 @@ int lab() {
 	return 0;
 }
 int main() {
-	//lab();
-	node_t* p = NULL;
-	node_t* q = NULL;
-	q = InsertForTest(q, 1);
-	q=InsertForTest(q, 2);
-	q=InsertForTest(q, 7);
-	p = InsertForTest(p, 3);
-	p = InsertForTest(p, 4);
-	p = InsertForTest(p, 6);
-	p = InsertForTest(p, -1);
-	p = InsertForTest(p, -2);
-	p = InsertForTest(p, 10);
-	p = InsertForTest(p, 11);
-	p = InsertForTest(p, 12);
-	PrintTree(p);
-	printf("\n");
-	PrintTree(q);
-	printf("\n");
-	p=Merge(p, q);
-	PrintTree(p);
-	TreeDestroy(p);
+	lab();
 	return 0;
 }
