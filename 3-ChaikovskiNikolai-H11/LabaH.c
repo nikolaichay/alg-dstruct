@@ -76,10 +76,12 @@ node_t* Insert(node_t* p, int key, int data) {
 		}
 	}
 
-	if (key < p->key)
+	if (key < p->key) {
 		p->left = Insert(p->left, key, data);
-	if (key >= p->key)
+	}
+	if (key >= p->key) {
 		p->right = Insert(p->right, key, data);
+	}
 	return Balance(p);
 }
 
@@ -161,10 +163,12 @@ node_t* SearchKey(node_t* p, int k) {
 		fprintf(stdout, "yes\n");
 		return p;
 	}
-	if (k < p->key)
-		SearchKey(p->left, k);
-	else
-		SearchKey(p->right, k);
+	if (k < p->key) {
+		return SearchKey(p->left, k);
+	}
+	else {
+		return SearchKey(p->right, k);
+	}
 }
 
 node_t* DeleteData(node_t* p, int data) {
@@ -194,13 +198,16 @@ void UpdateKey(node_t* p, int new) {
 	UpdateKey(p->right, new);
 }
 
-void PrintTree(node_t* p) {
+void PrintTree(node_t* p, int level) {
 	if (!p) {
 		return;
 	}
-	printf("%i ,%i\n", p->data, p->key);
-	PrintTree(p->left);
-	PrintTree(p->right);
+	PrintTree(p->left, level + 1);
+	for (int i = 0; i < level; ++i) {
+		printf(" ");
+	}
+	printf("%i,%i\n", p->key, p->data);
+	PrintTree(p->right, level + 1);
 	return;
 }
 node_t* Merge(node_t* p, node_t* q) {
@@ -268,7 +275,7 @@ node_t* Merge(node_t* p, node_t* q) {
 	prev->right = NULL;
 	tmp = p;
 	prev = NULL;
-	while (k1 - k2 != 0) {
+	while (k1 - k2 - 1 != 0) {
 		prev = tmp;
 		tmp = tmp->left;
 		k1--;
@@ -277,6 +284,7 @@ node_t* Merge(node_t* p, node_t* q) {
 	cur->right = tmp;
 	prev->left = cur;
 	prev = Balance(prev);
+	p = Balance(p);
 	return p;
 }
 
