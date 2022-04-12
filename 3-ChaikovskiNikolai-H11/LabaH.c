@@ -210,6 +210,23 @@ void PrintTree(node_t* p, int level) {
 	PrintTree(p->right, level + 1);
 	return;
 }
+
+node_t* ForMerge(node_t* p, node_t* q, node_t* cur, node_t* prev_p, int k1, int k2) {
+	if (k1 - k2 == 0) {
+		cur->height = q->height + 1;
+		cur->left = q;
+		cur->right = p;
+		if (!prev_p) {
+			p = cur;
+			return Balance(p);
+		}
+		prev_p->left = cur;
+		return Balance(prev_p);
+	}
+	p = ForMerge(p->left, q, cur, p, k1 - 1, k2);
+	return Balance(p);
+}
+
 node_t* Merge(node_t* p, node_t* q) {
 	if (!p) {
 		return q;
@@ -256,19 +273,7 @@ node_t* Merge(node_t* p, node_t* q) {
 		tmp = tmp->left;
 		k1++;
 	}
-	tmp = p;
-	prev = q;
-	while (k1 - k2  != 0) {
-		prev = tmp;
-		tmp = tmp->left;
-		k1--;
-	}
-	cur->height = q->height + 1;
-	cur->left = q;
-	cur->right = tmp;
-	prev->left = cur;
-	prev = Balance(prev);
-	p = Balance(p);
+	p = ForMerge(p, q, cur, NULL, k1, k2);
 	return p;
 }
 
