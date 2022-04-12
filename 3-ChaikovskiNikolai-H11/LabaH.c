@@ -204,7 +204,7 @@ void PrintTree(node_t* p, int level) {
 	}
 	PrintTree(p->left, level + 1);
 	for (int i = 0; i < level; ++i) {
-		printf(" ");
+		printf("  ");
 	}
 	printf("%i,%i\n", p->key, p->data);
 	PrintTree(p->right, level + 1);
@@ -217,8 +217,8 @@ node_t* Merge(node_t* p, node_t* q) {
 	if (!q) {
 		return p;
 	}
-	int k1 = 0;
-	int k2 = 0;
+	int k1 = Height(p);
+	int k2 = Height(q);
 	int k = 0;
 	node_t* tmp = p;
 	while (tmp->right) {
@@ -230,29 +230,6 @@ node_t* Merge(node_t* p, node_t* q) {
 		tmp = tmp->right;
 	}
 	int len2 = tmp->key;
-	tmp = p;
-	while (tmp->left) {
-		tmp = tmp->left;
-		k1++;
-	}
-	tmp = p;
-	while (tmp->right) {
-		tmp = tmp->right;
-		k++;
-	}
-	k1 = k1 > k ? k1 : k;
-	tmp = q;
-	k = 0;
-	while (tmp->left) {
-		tmp = tmp->left;
-		k2++;
-	}
-	tmp = q;
-	while (tmp->right) {
-		tmp = tmp->right;
-		k++;
-	}
-	k2 = k2 > k ? k2 : k;
 	if (k1 > k2) {
 		UpdateKey(p, len2);
 	}
@@ -274,12 +251,19 @@ node_t* Merge(node_t* p, node_t* q) {
 	node_t* cur = tmp;
 	prev->right = NULL;
 	tmp = p;
-	prev = NULL;
-	while (k1 - k2 - 1 != 0) {
+	k1 = 1;
+	while (tmp->left) {
+		tmp = tmp->left;
+		k1++;
+	}
+	tmp = p;
+	prev = q;
+	while (k1 - k2  != 0) {
 		prev = tmp;
 		tmp = tmp->left;
 		k1--;
 	}
+	cur->height = q->height + 1;
 	cur->left = q;
 	cur->right = tmp;
 	prev->left = cur;
