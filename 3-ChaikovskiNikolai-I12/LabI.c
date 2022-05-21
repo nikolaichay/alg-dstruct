@@ -8,6 +8,7 @@
 #define BUF_SIZE 16
 #define INVALID_IDX -1
 #define BTREE_PARAM 3
+#define INT_MAX_LEN 10
 
 typedef struct Node {
     bool isLeaf;
@@ -122,6 +123,7 @@ bool BTreeInsert(BTree* tree, const int key) {
         newRoot->children[0] = oldRoot;
         if (!SplitChild(newRoot, tree->t, 0)) {
             NodeDestroy(newRoot);
+            tree->root = oldRoot;
             return false;
         }
         return InsertNonfull(newRoot, key, tree->t);
@@ -377,10 +379,10 @@ void BTreeRemove(BTree* tree, const int key) {
     }
 }
 
-void Destroy(Node* node, const int t) {
+void Destroy(Node* node) {
     if (!node->isLeaf) {
         for (int i = 0; i < node->count + 1; ++i) {
-            Destroy(node->children[i], t);
+            Destroy(node->children[i]);
         }
         NodeDestroy(node);
     }
@@ -389,6 +391,25 @@ void Destroy(Node* node, const int t) {
 void BTreeDestroy(BTree* tree) {
     Destroy(tree->root, tree->t);
     tree->root = NULL;
+}
+
+void Print(const Node* node, const int t, int margin) {
+    if (!node->isLeaf)
+        for (int i = 0; i < (node->count + 1) / 2; i++)
+            Print(node->children[i], t, margin + 1);
+    for (int i = 0; i < margin * ((INT_MAX_LEN + 1) * (2 * t - 1) + 1); i++)
+        printf(" ");
+    printf("[");
+    for (int i = 0; i < node->count - 1; ++i)
+        printf("%i,", node->keys[i]);
+    printf("%i]\n", node->keys[node->count - 1]);
+    if (!node->isLeaf)
+        for (int i = (node->count + 1) / 2; i < node->count + 1; i++)
+            Print(node->children[i], t, margin + 1);
+}
+
+void BTreePrint(BTree* tree) {
+    Print(tree->root, tree->t, 0);
 }
 
 int Test(FILE* in, FILE* out) {
